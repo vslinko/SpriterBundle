@@ -1,0 +1,19 @@
+# Copyright 2012 Rithis Studio LLC
+# Author Vyacheslav Slinko <vyacheslav.slinko@rithis.com>
+
+services:
+    rithis.spriter.imagine:
+        class: Imagine\Gd\Imagine
+
+    rithis.spriter:
+        class: Rithis\Spriter\Spriter
+        arguments:
+            - @rithis.spriter.imagine
+
+    rithis.spriter.twig.spriter_extension:
+        class: Rithis\SpriterBundle\Twig\SpriterExtension
+        arguments:
+            - @rithis.spriter
+            - @kernel
+        tags:
+            - { name: twig.extension }
