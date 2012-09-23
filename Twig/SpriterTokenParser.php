@@ -17,14 +17,23 @@ class SpriterTokenParser extends Twig_TokenParser
 
         $nodes['directory'] = $this->parser->getExpressionParser()->parseExpression();
 
-        if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'to')) {
+        if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'with')) {
             $this->parser->getStream()->next();
-            $nodes['output'] = $this->parser->getExpressionParser()->parseExpression();
-        }
 
-        if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'url')) {
-            $this->parser->getStream()->next();
-            $nodes['url'] = $this->parser->getExpressionParser()->parseExpression();
+            if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'prefix')) {
+                $this->parser->getStream()->next();
+                $nodes['prefix'] = $this->parser->getExpressionParser()->parseExpression();
+            }
+
+            if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'output-path')) {
+                $this->parser->getStream()->next();
+                $nodes['output'] = $this->parser->getExpressionParser()->parseExpression();
+            }
+
+            if ($this->parser->getStream()->test(Twig_Token::NAME_TYPE, 'url')) {
+                $this->parser->getStream()->next();
+                $nodes['url'] = $this->parser->getExpressionParser()->parseExpression();
+            }
         }
 
         $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);

@@ -37,11 +37,16 @@ class SpriterExtension extends Twig_Extension
         );
     }
 
-    public function spriteFunction($directory, $output = '%kernel.root_dir%/../web/sprites', $url = '/sprites')
+    public function spriteFunction($directory, $prefix = 'sprite-', $output = '%kernel.root_dir%/../web/sprites', $url = '/sprites')
     {
         $name = crc32($directory);
 
-        $directory = $this->kernel->locateResource($directory);
+        if (substr($directory, 0, 1) == '@') {
+            $directory = $this->kernel->locateResource($directory);
+        } else if (!preg_match('#(/|[A-Z]:)#', $directory)) {
+            $directory = sprintf("%s/../web/%s", $this->kernel->getRootDir(), $directory);
+        }
+
         $output = str_replace('%kernel.root_dir%', $this->kernel->getRootDir(), $output);
 
         if (!is_dir($output)) {
@@ -52,7 +57,7 @@ class SpriterExtension extends Twig_Extension
 
         $sprite->getImage()->save(sprintf('%s/%s.png', $output, $name));
 
-        $formatter = new CssFormatter(sprintf('%s.png', $name));
+        $formatter = new CssFormatter(sprintf('%s.png', $name), $prefix);
 
         file_put_contents(sprintf('%s/%s.css', $output, $name), $formatter->format($sprite));
 

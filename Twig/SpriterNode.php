@@ -18,6 +18,12 @@ class SpriterNode extends Twig_Node
             ->write('echo $this->env->getExtension(\'rithis_spriter\')->spriteFunction(')
             ->subcompile($this->getNode('directory'));
 
+        if ($this->hasNode('prefix')) {
+            $compiler
+                ->write(', ')
+                ->subcompile($this->getNode('prefix'));
+        }
+
         if ($this->hasNode('output')) {
             $compiler
                 ->write(', ')
